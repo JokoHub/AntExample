@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Ant Project" default="run">
+  <description>
+    An example of usin Ant with one of the IBA test exercises.
+  </description>
+
+  <property name = "sourceDir" location="src"/>
+  <property name = "classDir" location="build"/>
+  <property name = "jarDir" location="dist"/>
+  <property name = "dataDir" location="data"/>
+
+  <target name = "init">
+    <tstamp/>
+    <mkdir dir = "${classDir}"/>
+    <mkdir dir = "${jarDir}"/>
+  </target>
+
+  <target name = "compile" depends="init">
+    <javac srcdir = "${sourceDir}" destdir = "${classDir}"/>
+  </target>
+
+  <target name="dist" depends="compile">
+    <jar destfile="${jarDir}/project.jar" basedir="${classDir}">
+      <manifest>
+        <attribute name="Built-By" value="Joko"/>
+        <attribute name="Main-Class" value="ATMClient"/>
+        <attribute name="Class-Path" value="."/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="dist">
+    <java jar="${jarDir}/project.jar" fork="true" output="System.out">
+      <arg value="${dataDir}/test.dat"/>
+    </java>
+  </target>
+
+  <target name="custom">
+    <taskdef name="custom" classname="CustomTask" classpath="build"/>
+    <custom message="What is going on?"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${classDir}"/>
+    <delete dir="${jarDir}"/>
+  </target>
+</project>
